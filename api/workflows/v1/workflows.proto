@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package workflows.v1;
+
+import "rbt/v1alpha1/options.proto";
+import "rbt/v1alpha1/tasks.proto";
+
+enum WorkflowStatus {
+  RUNNING = 0;
+  CANCELLED = 1;
+  COMPLETED = 2;
+}
+
+// The main Reboot "state" of our application: https://docs.reboot.dev/develop/schema
+message Workflow {
+  option (rbt.v1alpha1.state) = {};
+
+  // The code defining the workflow.
+  repeated string js_code = 1;
+  // The status of the workflow.
+  WorkflowStatus status = 2;
+  // The task that the workflow is running in.
+  rbt.v1alpha1.TaskId task_id = 3;
+}
+
+service WorkflowMethods {
+  // Creates and starts a workflow.
+  rpc CreateAndRun(CreateAndRunRequest) returns (CreateAndRunResponse) {
+    option (rbt.v1alpha1.method).writer = {
+      constructor: {},
+    };
+  }
+
+  // Allows for monitoring the status of a workflow.
+  rpc Status(StatusRequest) returns (StatusResponse) {
+    option (rbt.v1alpha1.method).reader = {};
+  }
+
+  // Private: actually executes the workflow.
+  rpc Run(RunRequest) returns (RunResponse) {
+    option (rbt.v1alpha1.method).workflow = {};
+  }
+}
+
+message CreateAndRunRequest {
+  // JS code to execute as a workflow.
+  string js_code = 1;
+}
+
+message CreateAndRunResponse {
+  // A TaskId to allow for getting the result of the workflow.
+  rbt.v1alpha1.TaskId task_id = 1;
+}
+
+message StatusRequest {}
+
+message StatusResponse {
+  // The current status of the workflow.
+  WorkflowStatus status = 1;
+}
+
+message RunRequest {}
+
+message RunResponse {}

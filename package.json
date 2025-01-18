@@ -1,0 +1,19 @@
+{
+  "name": "workflow-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "@reboot-dev/reboot": "^0.22.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0-dev.20250117"
+  }
+}
